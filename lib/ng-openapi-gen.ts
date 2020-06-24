@@ -147,7 +147,13 @@ export class NgOpenApiGen {
       this.models.set(name, model);
     }
   }
+  private getSubstringAfterUnderscore(stringToGet: string) {
+    if (stringToGet.includes('_')) {
+      return stringToGet.split('_').pop();
+    }
 
+    return stringToGet;
+  }
   private readServices() {
     const defaultTag = this.options.defaultTag || 'Api';
 
@@ -159,6 +165,8 @@ export class NgOpenApiGen {
         const methodSpec = pathSpec[method] as OperationObject;
         if (methodSpec) {
           let id = methodSpec.operationId;
+          id = this.getSubstringAfterUnderscore(id);
+
           if (id) {
             // Make sure the id is valid
             id = methodName(id);
